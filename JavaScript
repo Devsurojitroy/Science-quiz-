@@ -1,0 +1,75 @@
+const questions = [
+    {
+        question: 'What is the speed of light in vacuum?',
+        answers: [
+            { text: '299,792 km/s', correct: true },
+            { text: '150,000 km/s', correct: false },
+            { text: '300,000 km/s', correct: false },
+            { text: '3,000 km/s', correct: false }
+        ]
+    },
+    {
+        question: 'Who formulated the theory of relativity?',
+        answers: [
+            { text: 'Isaac Newton', correct: false },
+            { text: 'Niels Bohr', correct: false },
+            { text: 'Albert Einstein', correct: true },
+            { text: 'Galileo Galilei', correct: false }
+        ]
+    },
+    // Add more questions here
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    document.getElementById('score-container').innerText = '';
+    nextQuestion();
+}
+
+function nextQuestion() {
+    resetState();
+    showQuestion(questions[currentQuestionIndex]);
+}
+
+function showQuestion(question) {
+    const questionContainer = document.getElementById('question-container');
+    questionContainer.innerText = question.question;
+    const answerButtons = document.getElementById('answer-buttons');
+    question.answers.forEach(answer => {
+        const button = document.createElement('button');
+        button.innerText = answer.text;
+        button.classList.add('btn');
+        button.addEventListener('click', () => selectAnswer(answer));
+        answerButtons.appendChild(button);
+    });
+}
+
+function resetState() {
+    const answerButtons = document.getElementById('answer-buttons');
+    while (answerButtons.firstChild) {
+        answerButtons.removeChild(answerButtons.firstChild);
+    }
+}
+
+function selectAnswer(answer) {
+    const correct = answer.correct;
+    if (correct) {
+        score++;
+    }
+    document.getElementById('score-container').innerText = `Score: ${score}`;
+    currentQuestionIndex++;
+    if (currentQuestionIndex < questions.length) {
+        nextQuestion();
+    } else {
+        document.getElementById('question-container').innerText = 'Quiz completed!';
+        document.getElementById('next-button').style.display = 'none';
+    }
+}
+
+document.getElementById('next-button').addEventListener('click', nextQuestion);
+
+startQuiz();
